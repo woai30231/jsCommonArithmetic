@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="Zh-cn">
+<head>
+	<title>跑马灯代码测试</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1.0"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+	<meta name="discription" content=""/>
+	<meta name="Keywords" content=""/>
+	<meta name="renderer" content="webkit"/>
+	<style type="text/css">
+		
+		*{
+			margin: 0px;
+			padding: 0px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			font: inherit;
+			vertical-align: baseline;
+			border: 0px;
+			-webkit-text-size-adjust: 100%!important;
+			text-size-adjust: 100%!important;
+			-webkit-tap-highlight-color: rgba(0,0,0,0)!important;
+			tap-highlight-color: rgba(0,0,0,0)!important;
+		}
+		body{
+			font-size: 14px;
+			color: #ccc;
+			font-family: 'microsoft yahei',Arial;
+		}
+		.box{
+			padding:8px 15px;
+			max-width: 1000px;
+			width: 100%;
+			margin: 8px auto;
+			border: 1px solid #eee;
+		}
+		.scroll_nav{
+			height: 48px;
+			position: relative;
+			padding-right: 30px;
+			overflow: hidden;
+		}
+		.scroll_nav .switch_btn{
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			height: 48px;
+			width: 30px;
+			z-index: 99;
+		}
+		.scroll_nav > .nav{
+			display: block;
+			width: 100%;
+			line-height: 48px;
+			list-style: none;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+		.scroll_nav > .nav{
+			-webkit-transition: all 0.6s ease-out 0s;
+			-moz-transition: all 0.6s ease-out 0s;
+			-ms-transition: all 0.6s ease-out 0s;
+			-o-transition: all 0.6s ease-out 0s;
+			transition: all 0.6s ease-out 0s;
+		}
+		.scroll_nav > .nav li{
+			display: block;
+			width: 100%;
+		}
+		.scroll_nav > .nav li.active{
+			color: cyan;
+		}
+		a{
+			color: inherit;
+			text-decoration: none;
+		}
+		.switch_btn > .btn{
+			display: block;
+			width: 24px;
+			height: 24px;
+			margin: 0px auto;
+		}
+		.switch_btn > .btn:hover{
+			background-color: #eee;
+		}
+		.switch_btn .p_t{
+			display: block;
+			width: 10px;
+			height: 10px;
+			margin: 0px auto;
+			border-left: 1px solid #000;
+			border-top: 1px solid #000;
+		}
+		.top > .p_t{
+			-webkit-transform: rotate(45deg) translate(8px,8px);
+		}
+		.bottom > .p_t{
+			-webkit-transform: rotate(-135deg);
+		}
+
+	</style>
+</head>
+<body>
+
+<div class="box">
+	
+	<!--滚动导航 start-->
+	<div class="scroll_nav">
+		
+		<!--导航 start-->
+		<ul id="nav" class="nav">
+			<li>第一项</li>
+			<li>第二项</li>
+			<li>第三项</li>
+		</ul>
+		<!--导航 end-->
+
+		<!--切换按钮 start-->
+		<div class="switch_btn">
+			<a class="btn top" href="javascript:void(0);"><em class="p_t"></em></a>
+			<a class="btn bottom" href="javascript:void(0);"><em class="p_t"></em></a>
+		</div>
+		<!--切换按钮 end-->
+	</div>
+	<!--滚动导航 end-->
+</div>
+
+<script type="text/javascript">
+	function addEvent(dom,type,handler){
+		return dom.addEventListener?dom.addEventListener(type,handler,false):dom.attachEvent("on"+type,handler);
+	};
+	(function(){
+		function _fn(){
+			var dom = document.getElementById('nav');
+			if(dom){
+				var parentDom = dom.parentNode;
+				var width = parentDom.offsetWidth;
+				width = width - 30;
+				dom.style.width = width + 'px';
+			};
+		};
+		//默认执行一次
+		_fn();
+		addEvent(window,'resize',_fn);
+	})();
+
+	(function(){
+		var dom = document.getElementById('nav');
+		if(!dom)return;
+		var domParent = dom.parentNode;
+		var isStopLoop = false;
+		var isToTop = document.querySelector(".switch_btn > .btn.top");
+		var isToBottom = document.querySelector('.switch_btn > .btn.bottom');
+		var top = 0;//初始高度
+		var domChildren = dom.getElementsByTagName('li');
+		var cLength = domChildren.length;
+		var loopArr = (function(){
+			var arr = [];
+			for(var i = 0;i<cLength;i++){
+				arr.push(i);
+			};
+			return arr;
+		})();
+		var loopHeight = domChildren[0].offsetHeight;
+		//是否正在执行动画
+		var isOnAnimation = false;
+		var clearTimeoutId;
+		var loopHanlder = function _fn(){
+			if(isStopLoop)return;
+			isOnAnimation = true;
+			loopArr.push(loopArr.shift());
+			setPos();
+			clearTimeoutId = setTimeout(_fn,3000);
+		};
+		//定义一个函数实现导航list去样式
+		function add_class(index){
+			for(var i = 0;i<cLength;i++)(function(n){
+				var cTxt = domChildren[n].className.replace(/^\s+|\s+$/g,'').split(/\s+/);
+				var num = cTxt.indexOf('active');
+				if(num > -1){
+					var cssArr = (function(){
+						var arr = [];
+						for(var j = 0;j<cTxt.length;j++){
+							if(cTxt[j] != 'active'){
+								arr.push(cTxt[j]);
+							};
+						};
+						return arr;
+					})();
+					domChildren[n].className = cssArr.join(' ');
+				};
+
+			})(i);
+			domChildren[index].className += ' active';
+		};
+		add_class(0);
+		loopHanlder();
+		domParent.onmouseover = function(e){
+			clearTimeout(clearTimeoutId);
+			if(e.stopPropagation){
+				e.stopPropagation();
+			};
+			isStopLoop = true;
+			return false;
+		};
+		domParent.onmouseout = function(e){
+			if(e.stopPropagation){
+				e.stopPropagation();
+			};
+			isStopLoop = false;
+			loopHanlder();
+			return false;
+		};
+		addEvent(isToTop,'click',toTopHandler);
+		addEvent(isToBottom,'click',toBottomHandler);
+		function toTopHandler(){
+			isStopLoop = true;
+			loopArr.push(loopArr.shift());
+			setPos();
+			clearTimeout(clearTimeoutId);
+		};
+		function toBottomHandler(){
+			isStopLoop = true;
+			loopArr.unshift(loopArr.pop());
+			setPos();
+			clearTimeout(clearTimeoutId);
+		};
+		function setPos(){
+			top = - loopArr[0] * loopHeight;
+			add_class(loopArr[0]);
+			dom.style.top = top + 'px';
+		};
+
+
+	})();	
+</script>
+
+</body>
+</html>
