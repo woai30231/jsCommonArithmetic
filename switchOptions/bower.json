@@ -1,0 +1,21 @@
+{
+  "name": "switchOptions",
+  "homepage": "https://github.com/woai30231/jsCommonArithmetic",
+  "authors": [
+    "Jianfeng <554830231@qq.com>"
+  ],
+  "description": "the bower scripts",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.6.1"
+  }
+}
