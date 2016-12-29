@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="Zh-cn">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1.0"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+	<meta name="description" content=""/>
+	<meta name="Keywords" content=""/>
+	<meta name="renderer" content="webkit"/>
+	<title>demo测试</title>
+	<style type="text/css">
+		
+		*{
+			margin: 0px;
+			padding: 0px;
+			border: 0px;
+			vertical-align: baseline;
+			font: inherit;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			-webkit-text-size-adjust: 100%!important;
+			text-size-adjust: 100%!important;
+			-webkit-tap-highlight-color: rgba(0,0,0,0)!important;
+			tap-highlight-color: rgba(0,0,0,0)!important;
+		}
+		a{
+			color: inherit;
+			text-decoration: none;
+		}
+		body{
+			font-size: 14px;
+			color: #ccc;
+			font-family: "microsoft yahei",Arial;
+		}
+		.container{
+			width: 100%;
+			padding: 10px;
+			background-color: #fff;
+			max-width: 1200px;
+			margin: 0px auto;
+		}
+		.title-box{
+			overflow: hidden;
+		}
+		.title-box ul{
+			list-style: none;
+		}
+		.title-box ul li{
+			float: left;
+			padding: 0em 1em;
+			line-height: 1.8em;
+			font-size: 14px;
+			border: 1px solid #999;
+			border-left-width: 0px;
+			-webkit-transition: all 0.3s ease 0s;
+			-moz-transition: all 0.3s ease 0s;
+			-ms-transition: all 0.3s ease 0s;
+			-o-transition: all 0.3s ease 0s;
+			transition: all 0.3s ease 0s;
+		}
+		.title-box ul li:first-child{
+			border-left-width: 1px;
+		}
+		.title-box ul li:hover,.title-box ul li.active{
+			background-color: #eee;
+			color: #000;
+		}
+		.content-box{
+			margin-top: 10px;
+			border: 1px solid #ccc;
+			padding: 10px;
+		}
+		.content-box .c{
+			display: none;
+		}
+		.d-bt{
+			font-size: 18px;
+			font-weight: bold;
+			line-height: 1.8em;
+			color: #000;
+		}
+		.mvc-box{
+			margin-top: 30px;
+		}
+		.td{
+			margin: 15px 0px;
+			text-indent: 2.0em;
+			color: #333;
+		}
+	</style>
+	<script type="text/javascript" src="./js/angular/angular.js"></script>
+</head>
+<body>
+
+
+<div class="container">
+	
+	<!--传统js实现的选项卡-->
+	<!--选项区域标题-->
+	<div class="traditional-box">
+		<h1 class="d-bt">传统方式实现选项卡</h1>
+		<div id="t-box1" class="title-box">
+			<ul>
+				<li class="active"><a href="javascript:void(0);" title="#">选项一</a></li>
+				<li><a href="javascript:void(0);" title="#">选项二</a></li>
+				<li><a href="javascript:void(0);" title="#">选项三</a></li>
+				<li><a href="javascript:void(0);" title="#">选项四</a></li>
+			</ul>
+		</div>
+		<div id="c-box1" class="content-box">
+			<div style="display:block;" class="c">内容一</div>
+			<div class="c">内容二</div>
+			<div class="c">内容三</div>
+			<div class="c">内容四</div>
+		</div>
+	</div>
+	<!--选项区域内容-->
+
+
+	<!--mvcjs实现的选项卡-->
+	<!--选项区域标题-->
+	<div class="mvc-box" ng-app="myApp" ng-controller="firstController">
+		<h1 class="d-bt">mvc方式实现选项卡</h1>
+		<div class="title-box">
+			<ul>
+				<li ng-click="swOption($index)" ng-repeat="item in listArray"><a href="javascript:void(0);" title="#" ng-bind="item"></a></li>
+			</ul>
+		</div>
+		<div class="content-box">
+			<div ng-bind="content"></div>
+		</div>
+	</div>
+	<!--选项区域内容-->
+
+
+	<!--标题-->
+	<div style="margin-top:40px;">
+		<h1 class="d-bt">两种方式实现</h1>
+
+		<div class="td">我们可以看到，传统用js实现的方式，需要更多的代码，而mvc开发的方式代码量相对较少，为什么，因为都是采用脚本动态渲染上去的，不需要我们手动添加html代码到页面上！也就是说，在mvc中我们写的html更倾向于是一种模板代码！而数据都在我们的模型中！</div>
+		<div class="td">两种方式在脚本的时候注重点不一样，传统方式更多的牵扯到dom查询、修改等，而mvc模式更多的是实现数据逻辑的编程！所以这有助于我们在写页面的时候把更多的经历放在后台给到的数据上，而不是放太多经历到dom的查找、修改上！以便于更快的跟后台沟通！</div>
+
+	</div>
+	<!--选项区域内容-->
+
+
+</div>
+
+
+<script type="text/javascript">
+	//定义一个阻止冒泡的函数
+	function stopPropagation(e){
+		if(e.stopPropagation){
+			e.stopPropagation();
+		}else{
+			e.cancelBubble = true;
+		};
+	};
+	setTimeout(function(){
+		var title_box = document.getElementById('t-box1');
+		var content_box = document.getElementById('c-box1');
+		var t_oLi = title_box.getElementsByTagName('li');
+		var c_oLi = content_box.getElementsByClassName('c');
+		for(var i = 0,len = t_oLi.length;i<len;i++)(function(n){
+			t_oLi[n].onclick = function(e){
+				var e = e || window.event;
+				stopPropagation(e);
+				for(var j = 0;j<len;j++){
+					c_oLi[j].style.display = "none";
+					t_oLi[j].className = '';
+				};
+				t_oLi[n].className = 'active';
+				c_oLi[n].style.display = "block";
+			};
+		})(i);
+	},0);
+
+	//angularjs
+	(function(){
+		angular.module('myApp',[])
+		.controller('firstController',function($scope,listArray,switchOptions){
+			$scope.listArray = listArray;
+			$scope.swOption = function(index){
+				$scope.content = switchOptions.swit(index);
+			};
+		})
+		.constant('listArray',['选项一','选项二','选项三','选项四'])
+		.factory('switchOptions',function(){
+			return{
+				swit:swit
+			};
+			function swit(index){
+				index = index + 1;
+				return "内容"+index;
+			};
+		});
+	})();
+</script>
+</body>
+</html>
